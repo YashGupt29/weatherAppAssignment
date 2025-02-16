@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useWeather } from "../context/WeatherContext"; // adjust the path if needed
+import { useWeather } from "../context/WeatherContext";
 
 const SearchBar: React.FC = () => {
   const { setSearchTerm } = useWeather();

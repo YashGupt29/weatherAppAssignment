@@ -1,26 +1,38 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useWeather } from "../context/WeatherContext"; // Ensure the path is correct
+import { useWeather } from "../context/WeatherContext";
 
 const WeatherList: React.FC = () => {
   const { weatherData, searchTerm, loading } = useWeather();
   const [page, setPage] = useState<number>(1);
   const citiesPerPage = 5;
 
-  // Filter the weather data based on the search term from context
-  const filteredData = weatherData.filter((city) =>
-    city.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredData =
+    weatherData?.filter((city) =>
+      city?.name?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+    ) || [];
 
-  // Paginate the filtered results
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[50vh]">
+        <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-4 text-lg text-gray-600">Loading cities...</p>
+      </div>
+    );
+  }
+
+  if (!loading && filteredData?.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[50vh]">
+        <p className="mt-4 text-lg text-gray-600">No cities found</p>
+      </div>
+    );
+  }
+
   const paginatedData = filteredData.slice(
     (page - 1) * citiesPerPage,
     page * citiesPerPage
   );
-
-  if (loading) {
-    return <div>Loading cities...</div>;
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-50 to-gray-200 py-10">
