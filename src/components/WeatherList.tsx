@@ -1,70 +1,26 @@
-import type React from "react";
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useWeather } from "../context/WeatherContext"; // Ensure the path is correct
 
-interface WeatherData {
-  id: number;
-  name: string;
-  main: {
-    temp: number;
-  };
-  weather: Array<{
-    description: string;
-    icon: string;
-  }>;
-}
-
-interface WeatherListProps {
-  searchTerm: string;
-}
-
-const WeatherList: React.FC<WeatherListProps> = ({ searchTerm }) => {
-  const [weatherData, setWeatherData] = useState<WeatherData[]>([]);
+const WeatherList: React.FC = () => {
+  const { weatherData, searchTerm, loading } = useWeather();
   const [page, setPage] = useState<number>(1);
   const citiesPerPage = 5;
 
-  useEffect(() => {
-    const cities = [
-      "London",
-      "New York",
-      "Tokyo",
-      "Paris",
-      "Berlin",
-      "Moscow",
-      "Dubai",
-      "Sydney",
-      "Rome",
-      "Madrid",
-    ];
-    const fetchWeatherData = async () => {
-      const apiKey = import.meta.env.VITE_OPENWEATHERMAP_API_KEY;
-      if (!searchTerm) {
-        const promises = cities.map((city) =>
-          fetch(
-            `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`
-          ).then((res) => res.json())
-        );
-        const results = await Promise.all(promises);
-        setWeatherData(results);
-      } else {
-        const city = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?q=${searchTerm}&units=metric&appid=${apiKey}`
-        ).then((res) => res.json());
-        setWeatherData([city]);
-      }
-    };
-
-    fetchWeatherData();
-  }, [searchTerm]);
-
+  // Filter the weather data based on the search term from context
   const filteredData = weatherData.filter((city) =>
     city.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Paginate the filtered results
   const paginatedData = filteredData.slice(
     (page - 1) * citiesPerPage,
     page * citiesPerPage
   );
+
+  if (loading) {
+    return <div>Loading cities...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-50 to-gray-200 py-10">

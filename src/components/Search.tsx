@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useWeather } from "../context/WeatherContext"; // adjust the path if needed
 
-interface SearchBarProps {
-  onSearch: (term: string) => void;
-}
-interface CityData {
-  id: number;
-  name: string;
-}
-
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
+const SearchBar: React.FC = () => {
+  const { setSearchTerm } = useWeather();
   const [term, setTerm] = useState<string>("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [debouncedTerm, setDebouncedTerm] = useState<string>("");
@@ -35,17 +29,13 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
         const response = await fetch(
           `https://api.openweathermap.org/data/2.5/box/city?bbox=68.7,6.5,97.25,35.5,10&appid=${apiKey}&units=metric`
         );
-
         const data = await response.json();
         console.log("Fetched Data:", data);
 
         if (data.list) {
-          console.log("hello", data.list);
-
           const cityNames: string[] = data.list.map(
-            (city: CityData) => city.name
+            (city: { id: number; name: string }) => city.name
           );
-
           const filteredCities = cityNames.filter((city: string) =>
             city.toLowerCase().startsWith(debouncedTerm.toLowerCase())
           );
@@ -68,12 +58,12 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const handleSelect = (city: string) => {
     setTerm(city);
     setSuggestions([]);
-    onSearch(city);
+    setSearchTerm(city);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSearch(term);
+    setSearchTerm(term);
   };
 
   return (
