@@ -95,7 +95,7 @@ const SearchBar: React.FC = () => {
       </div>
       <button
         type="submit"
-        className="mt-4 w-[10%] px-4 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition-colors"
+        className="mt-4 w-full sm:w-[30%] md:w-[30%] lg:w-[15%] px-4 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition-colors cursor-pointer"
       >
         Search
       </button>
