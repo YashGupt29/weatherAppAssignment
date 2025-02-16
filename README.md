@@ -75,6 +75,10 @@ A simple weather application built with React and TypeScript that fetches curren
   - Lists weather information for a set of default cities (London, New York, Tokyo, etc.) when no search term is entered.
   - Implements pagination to browse through the list of cities.
   - Used Debouncing for search cities to limit api request
+  - implemented Context API for managing states
+  - implemented Error Boundary for handling errors during API requests
+  - can also implement lazy loading and fetch data using react-query(if Asked!!)
+  - also use redux(if told!!)
 
 - **City Details Page:**
 
