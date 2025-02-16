@@ -3,10 +3,13 @@ import React, { useState, useEffect } from "react";
 interface SearchBarProps {
   onSearch: (term: string) => void;
 }
+interface CityData {
+  id: number;
+  name: string;
+}
 
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [term, setTerm] = useState<string>("");
-  const [cities, setCities] = useState<string[]>([]);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [debouncedTerm, setDebouncedTerm] = useState<string>("");
 
@@ -38,10 +41,12 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 
         if (data.list) {
           console.log("hello", data.list);
-          const cityNames = data.list.map((city: any) => city.name);
-          setCities(cityNames);
 
-          const filteredCities = cityNames.filter((city) =>
+          const cityNames: string[] = data.list.map(
+            (city: CityData) => city.name
+          );
+
+          const filteredCities = cityNames.filter((city: string) =>
             city.toLowerCase().startsWith(debouncedTerm.toLowerCase())
           );
           setSuggestions(filteredCities);
